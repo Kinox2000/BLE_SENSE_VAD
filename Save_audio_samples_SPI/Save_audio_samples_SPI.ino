@@ -5,7 +5,7 @@
 
 uint CS = 4;
 static const int sampling_rate = 16000;
-static const int segundos = 20;
+static const int segundos = 200;
 short sampleBuffer[512];//en donde se almacenan las muestras, cada muestra es de 16 bits. Acá se almacenan 128 muestras de 16 bits.
 short audio[16000*1];                       //son 16 bits porque ese es el tamaño de un short
 int samplesRead;
@@ -82,7 +82,7 @@ void setup() {
     while (1);
   }
 
-  audio_samples = SD.open("AudioData.txt", FILE_WRITE);
+  audio_samples = SD.open("Audio.txt", FILE_WRITE);
     if (audio_samples) {
     Serial.print("Archivo abierto");
   
