@@ -5,15 +5,15 @@
 
 uint CS = 4;
 static const int sampling_rate = 16000;
-static const int segundos = 200;
+static const int segundos = 20;
 short sampleBuffer[512];//en donde se almacenan las muestras, cada muestra es de 16 bits. Acá se almacenan 128 muestras de 16 bits.
-short audio[16000*1];                       //son 16 bits porque ese es el tamaño de un short
+//short audio[16000];                       //son 16 bits porque ese es el tamaño de un short
 int samplesRead;
 int contador = 0;
 
-int speedMaximum = 3200000;
+//int speedMaximum = 3200000;
 
-SPISettings mySetting(speedMaximum, MSBFIRST, SPI_MODE0);
+//SPISettings mySetting(speedMaximum, MSBFIRST, SPI_MODE0);
 
 
 //LEDs pin definition
@@ -31,7 +31,7 @@ void setup() {
   pinMode(BLUE, OUTPUT);
   pinMode(GREEN, OUTPUT);
 
-  Serial.begin(115200);
+  Serial.begin(9600);
   while (!Serial);
 
   Serial.println("Inicio del programa");
@@ -78,6 +78,7 @@ void setup() {
   //}
 
   if (!PDM.begin(1, 16000)) {
+  //if (!PDM.begin(1, 22050)) {
     Serial.println("Failed to start PDM!");
     while (1);
   }
@@ -95,10 +96,13 @@ void setup() {
 
 void loop() {
   if (samplesRead) { 
-    for (int i = 0; i<samplesRead; i++){
+    for (int i = 0; i<samplesRead; i=i+2){
       //audio[contador] = sampleBuffer[i];
       //Serial.println(sampleBuffer[i])+32,768;
+      //if(i%2==0){
       audio_samples.write(sampleBuffer[i]);
+      //}
+      
 
       contador = contador +1;
 
@@ -109,12 +113,17 @@ void loop() {
   }
 
 
-  if(contador >= sampling_rate*segundos){
+  if(contador >= 160000){
     //PDM.end();
     audio_samples.close();
     digitalWrite(RED,HIGH);
     digitalWrite(BLUE,LOW);
     digitalWrite(GREEN,HIGH);
+    
+    //delay(25000);
+    //for(int i = 0; i<sampling_rate*segundos; i++){
+      //Serial.println(audio[i]);
+    //}
     while(1);
   }  
 }
